@@ -1,0 +1,83 @@
+/*
+ * Copyright 2014-2016 Netflix, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+plugins {
+    id 'com.gradle.plugin-publish' version '0.9.6'
+    id 'nebula.plugin-plugin' version '4.24.2'
+}
+
+description 'Template for RSocket projects'
+
+contacts {
+    'netflixoss@netflix.com' {
+        moniker 'Netflix Open Source Development'
+        github 'netflixgithub'
+    }
+}
+
+bintray {
+  publish = true
+  dryRun = false
+  pkg {
+    repo = 'RSocket'
+    userOrg = 'rsocket'
+    name = project.name
+    desc = project.description
+    websiteUrl = 'https://github.com/RSocket/${project.name}'
+    issueTrackerUrl = 'https://github.com/RSocket/${project.name}/issues'
+    vcsUrl = 'https://github.com/RSocket/${project.name}.git'
+    licenses = ['Apache-2.0']
+    labels = ['rsocket', 'RSocket']
+    publicDownloadNumbers = true
+    attributes = [:]
+    version {
+      name = project.version
+      vcsTag = project.version
+      attributes = [:]
+    }
+  }
+}
+
+dependencies {
+    compile 'com.netflix.nebula:nebula-core:4.+'
+    compile 'com.netflix.nebula:nebula-project-plugin:3.+'
+    compile 'com.netflix.nebula:nebula-bintray-plugin:3.+' // for publishing
+    compile 'com.netflix.nebula:nebula-release-plugin:4.+' // for releasing
+    compile 'com.netflix.nebula:gradle-override-plugin:3.+'
+    compile 'com.netflix.nebula:nebula-publishing-plugin:4.+' // for publishing
+    compile 'com.github.jengelman.gradle.plugins:shadow:1.+'
+    compile 'gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.13.1'
+    compile 'com.google.guava:guava:19.0' // For ClasspathHelper
+
+    testCompile('com.netflix.nebula:nebula-test:latest.release') {
+        exclude group: "org.codehaus.groovy", module: "groovy-all"
+    }
+}
+
+test {
+    maxHeapSize = '512m'
+}
+
+pluginBundle {
+    plugins {
+        rsocketProject {
+            id = 'io.rsocket.rsocket-project'
+            displayName = 'RSocket Project Template'
+            description = project.description
+            tags = ['rsocket', 'project']
+        }
+    }
+}
